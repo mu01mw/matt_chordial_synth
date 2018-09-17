@@ -95,7 +95,8 @@ void ChordialVoice::stopNote(float velocity, bool allowTailOff)
 	adsr2.gate(false);
 	if (!allowTailOff)
 	{
-		//adsr.reset();
+		adsr1.reset();
+		adsr2.reset();
 		clearCurrentNote();
 	}
 }

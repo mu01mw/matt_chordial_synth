@@ -84,6 +84,7 @@ ChordialSynth::ChordialSynth(juce::AudioProcessorValueTreeState& state) : apvtSt
 	apvtState.addParameterListener(FILTER_CUTOFF_PARAM, this);
 	apvtState.addParameterListener(FILTER_RESONANCE_PARAM, this);
 	apvtState.addParameterListener(FILTER_CUTOFF_MOD_DEPTH_PARAM, this);
+
 }
 
 void ChordialSynth::prepareToPlay(double sampleRate, int samplesPerBlock)
