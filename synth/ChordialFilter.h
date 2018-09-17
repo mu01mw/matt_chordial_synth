@@ -69,7 +69,14 @@ public:
 
 	void prepare(const juce::dsp::ProcessSpec& spec)
 	{
-		filter.prepare(spec);
+		oversampling = std::make_unique<juce::dsp::Oversampling<SampleType>> (spec.numChannels, 2, juce::dsp::Oversampling<SampleType>::FilterType::filterHalfBandPolyphaseIIR);
+		oversampling->initProcessing(spec.maximumBlockSize);
+
+		juce::dsp::ProcessSpec specOS;
+		specOS.sampleRate = spec.sampleRate * oversampling->getOversamplingFactor();
+		specOS.maximumBlockSize = spec.maximumBlockSize * oversampling->getOversamplingFactor();
+		specOS.numChannels = spec.numChannels;
+		filter.prepare(specOS);
 	}
 
 	template <typename ProcessContext>
@@ -77,7 +84,10 @@ public:
 	{
 		updateCutoff();
 		filter.setResonance(master->resonance.load());
-		filter.process(context);
+
+		ProcessContext contextOS(oversampling->processSamplesUp(context.getInputBlock()));
+		filter.process(contextOS);
+		oversampling->processSamplesDown(context.getOutputBlock());
 	}
 
 	void reset()
@@ -106,6 +116,7 @@ private:
 	juce::dsp::LadderFilter<SampleType> filter;
 	SampleType cutoffModVoice{ static_cast<SampleType>(0.0) };
 	SampleType keyboardTrackValue{ static_cast<SampleType>(1.0) };
+	std::unique_ptr<juce::dsp::Oversampling<SampleType>> oversampling;
 };
 }
 }
