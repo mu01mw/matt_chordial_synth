@@ -19,6 +19,7 @@ template <typename SampleType>
 class ChordialModuleVoice
 {
 public:
+    virtual ~ChordialModuleVoice(){};
 	void setSamplesPerControlSignal(int samples)
 	{
 		samplesPerControlSignal = samples;

@@ -84,8 +84,9 @@ public:
 	{
 		updateCutoff();
 		filter.setResonance(master->resonance.load());
-
-		ProcessContext contextOS(oversampling->processSamplesUp(context.getInputBlock()));
+        const auto& inBlock = context.getInputBlock();
+        auto upSampled = oversampling->processSamplesUp(inBlock);
+		ProcessContext contextOS(upSampled);
 		filter.process(contextOS);
 		oversampling->processSamplesDown(context.getOutputBlock());
 	}

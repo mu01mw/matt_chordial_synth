@@ -25,10 +25,10 @@ public:
 
 	ChordialMasterADSR()
 	{
-		setEnvelopeType(EnvelopeType::oneHit);
+		setEnvelopeType(EnvelopeType::sustained);
 		sampleRate = 44100;
 		setAttackTimeMs(10.0);
-		setDecayTimeMs(0.0);
+		setDecayTimeMs(1.0);
 		setReleaseTimeMs(2000.0);
 		setSustainValue(1.0);
 		setTargetRatioA(0.3);
@@ -68,6 +68,7 @@ public:
 	void setSustainValue(NumberType value)
 	{
 		sustainValue = value;
+        updateDecaySamples();
 	}
 
 	NumberType getSustainValue()
@@ -201,6 +202,7 @@ public:
 			break;
 
 		case State::sustain:
+                output = susLocal;
 			if (envLocal == ChordialMasterADSR<SampleType, NumberType>::EnvelopeType::oneHit)
 				state = State::release;
 			break;

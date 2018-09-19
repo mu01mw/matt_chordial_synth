@@ -66,7 +66,7 @@ private:
 
 
 template <typename FloatType>
-class ChordialOscillatorVoice : public ChordialModuleVoice<FloatType>
+    class ChordialOscillatorVoice : public ChordialModuleVoice<FloatType>
 {
 public:
     std::shared_ptr<ChordialOscillatorMaster<FloatType>> getMasterOscillator()
@@ -81,9 +81,9 @@ public:
 
 	void prepare(const juce::dsp::ProcessSpec& spec)
 	{
-		sampleRate = spec.sampleRate;
+		this->sampleRate = spec.sampleRate;
 		updatePhaseIncrement();
-		updateDownSampleRate();
+		this->updateDownSampleRate();
 
         auto maxChannels = juce::jmin<int>((int)spec.numChannels, 2);
         
@@ -213,7 +213,7 @@ private:
 	void updatePhaseIncrement()
 	{
 		const auto nextFrequencyValue = smoothedFrequency.getNextValue();
-        phaseIncrement = nextFrequencyValue * 2 * juce::MathConstants<FloatType>::pi / sampleRate;
+        phaseIncrement = nextFrequencyValue * 2 * juce::MathConstants<FloatType>::pi / this->sampleRate;
 	}
 
 	void updatePhase()
@@ -241,7 +241,7 @@ private:
 
 	void updateSmoothing(FloatType time) override
 	{
-		smoothedFrequency.reset(sampleRate, time);
+		smoothedFrequency.reset(this->sampleRate, time);
 	}
 
 	std::shared_ptr<ChordialOscillatorMaster<FloatType>> masterOscillator;

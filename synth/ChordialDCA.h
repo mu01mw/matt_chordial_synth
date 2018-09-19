@@ -33,8 +33,8 @@ public:
 	void prepare(const juce::dsp::ProcessSpec& spec)
 	{
 		gain.prepare(spec);
-		sampleRate = spec.sampleRate;
-		updateDownSampleRate();
+		this->sampleRate = spec.sampleRate;
+		this->updateDownSampleRate();
 	}
 
 	template <typename ProcessContext>

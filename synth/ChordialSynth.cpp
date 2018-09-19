@@ -47,7 +47,7 @@ ChordialSynth::ChordialSynth(juce::AudioProcessorValueTreeState& state) : apvtSt
 	// INIT VOICES
 	auto sound = std::make_unique<ChordialSound>();
 	synth.addSound(sound.release());
-	setNumberOfVoices(32);
+	setNumberOfVoices(4);
 
 	// INIT EFFECTS
 
@@ -60,9 +60,13 @@ ChordialSynth::ChordialSynth(juce::AudioProcessorValueTreeState& state) : apvtSt
 
 	// INIT PARAMETERS
 	apvtState.createAndAddParameter(ADSR1_ATTACK_PARAM, "ADSR1 Attack", juce::String(), juce::NormalisableRange<float>(1.0f, 500.0f), 10.0f, nullptr, nullptr);
+    apvtState.createAndAddParameter(ADSR1_DECAY_PARAM, "ADSR1 Decay", juce::String(), juce::NormalisableRange<float>(1.0f, 10000.0f), 100.0f, nullptr, nullptr);
+    apvtState.createAndAddParameter(ADSR1_SUSTAIN_PARAM, "ADSR1 Sustain", juce::String(), juce::NormalisableRange<float>(0.0f, 1.0f), 0.5f, nullptr, nullptr);
 	apvtState.createAndAddParameter(ADSR1_RELEASE_PARAM, "ADSR1 Release", juce::String(), juce::NormalisableRange<float>(3.0f, 10000.0f), 2000.0f, nullptr, nullptr);
 
 	apvtState.createAndAddParameter(ADSR2_ATTACK_PARAM, "ADSR2 Attack", juce::String(), juce::NormalisableRange<float>(1.0f, 500.0f), 10.0f, nullptr, nullptr);
+    apvtState.createAndAddParameter(ADSR2_DECAY_PARAM, "ADSR2 Decay", juce::String(), juce::NormalisableRange<float>(1.0f, 10000.0f), 100.0f, nullptr, nullptr);
+    apvtState.createAndAddParameter(ADSR2_SUSTAIN_PARAM, "ADSR2 Sustain", juce::String(), juce::NormalisableRange<float>(0.0f, 1.0f), 0.5f, nullptr, nullptr);
 	apvtState.createAndAddParameter(ADSR2_RELEASE_PARAM, "ADSR2 Release", juce::String(), juce::NormalisableRange<float>(3.0f, 10000.0f), 2000.0f, nullptr, nullptr);
 
 	apvtState.createAndAddParameter(LFO_AMT_PARAM, "LFO Amount", juce::String(), juce::NormalisableRange<float>(0.0f, 0.5f, 0.0f, 0.5f), 0.0f, nullptr, nullptr);
@@ -74,8 +78,12 @@ ChordialSynth::ChordialSynth(juce::AudioProcessorValueTreeState& state) : apvtSt
 	apvtState.createAndAddParameter(FILTER_CUTOFF_MOD_DEPTH_PARAM, "Filter Cutoff Modulation Depth", juce::String(), juce::NormalisableRange<float>(0.0f, 8.0f), 4.0f, nullptr, nullptr);
     
 	apvtState.addParameterListener(ADSR1_ATTACK_PARAM, this);
+    apvtState.addParameterListener(ADSR1_DECAY_PARAM, this);
+    apvtState.addParameterListener(ADSR1_SUSTAIN_PARAM, this);
 	apvtState.addParameterListener(ADSR1_RELEASE_PARAM, this);
 	apvtState.addParameterListener(ADSR2_ATTACK_PARAM, this);
+    apvtState.addParameterListener(ADSR2_DECAY_PARAM, this);
+    apvtState.addParameterListener(ADSR2_SUSTAIN_PARAM, this);
 	apvtState.addParameterListener(ADSR2_RELEASE_PARAM, this);
     apvtState.addParameterListener(LFO_AMT_PARAM, this);
     apvtState.addParameterListener(LFO_FREQ_PARAM, this);
