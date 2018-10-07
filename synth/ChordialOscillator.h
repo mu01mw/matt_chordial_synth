@@ -37,16 +37,31 @@ public:
     {
         detuneAmount.store(amount);
     }
+
+	FloatType getDetuneAmount()
+	{
+		return detuneAmount.load();
+	}
     
     void setPanoramicSpread(FloatType amount)
     {
         panSpreadAmount.store(amount);
     }
 
+	FloatType getPanoramicSpread()
+	{
+		return panSpreadAmount.load();
+	}
+
     void setFrequencyModulationDepth(FloatType depth)
     {
         frequencyModulationDepth.store(depth);
     }
+
+	FloatType getFrequencyModulationDepth()
+	{
+		return frequencyModulationDepth.load();
+	}
 
     FloatType* getFMInputPtr()
     {
@@ -177,6 +192,11 @@ public:
         baseFrequency = frequencyInHz;
         updateOscillatorFrequency(true);
     }
+
+	FloatType getBaseFrequency()
+	{
+		return baseFrequency;
+	}
     
     void setDetuneMultiplier(FloatType multiplier)
     {

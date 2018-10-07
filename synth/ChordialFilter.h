@@ -28,15 +28,30 @@ public:
         cutoff.store(hz);
     }
 
+	SampleType getCutoff()
+	{
+		return cutoff.load();
+	}
+
     void setResonance(SampleType value)
     {
         resonance.store(value);
     }
 
+	SampleType getResonance()
+	{
+		return resonance.load();
+	}
+
     void setCutoffModDepth(SampleType value)
     {
         cutoffModDepth.store(value);
     }
+
+	SampleType getCutoffModDepth()
+	{
+		return cutoffModDepth.load();
+	}
 
     SampleType* getCutoffModPtr()
     {

@@ -73,7 +73,7 @@ public:
 
     NumberType getSustainValue()
     {
-        return sustainValue;
+        return sustainValue.load();
     }
 
     void setReleaseTimeMs(NumberType ms)
@@ -84,7 +84,7 @@ public:
 
     NumberType getReleaseTimeMs()
     {
-        return releaseMs();
+        return releaseMs;
     }
 
     void setTargetRatioA(float targetRatio)

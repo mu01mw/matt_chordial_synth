@@ -18,16 +18,22 @@ ChordialSynth::ChordialSynth(juce::AudioProcessorValueTreeState& state) : apvtSt
     masterOscillator = std::make_shared<ChordialOscillatorMaster<float>>();
     masterOscillator->setWaveform(ChordialOscillatorMaster<float>::Waveform::saw);
     masterOscillator->setAntialiasing(true);
-    masterOscillator->setPanoramicSpread(0.0f);
-    masterOscillator->setDetuneAmount(0.000001);
+    masterOscillator->setPanoramicSpread(1.0f);
+    masterOscillator->setDetuneAmount(0.01);
+	masterOscillator->setFrequencyModulationDepth(0.05f);
+
+	masterADSR2.setAttackTimeMs(100.0f);
+	masterADSR2.setDecayTimeMs(2000.0f);
+	masterADSR2.setSustainValue(0.25f);
 
     masterFilter = std::make_shared<ChordialFilterMaster<float>>();
+	masterFilter->setResonance(0.75f);
 
     // INIT MODULATION
     lfo1.setMasterOscillator(std::make_shared<ChordialOscillatorMaster<float>>());
     lfo1.getMasterOscillator()->setAntialiasing(false);
     lfo1.getMasterOscillator()->setWaveform(ChordialOscillatorMaster<float>::Waveform::triangle);
-    lfo1.setBaseFrequency(3.0f);
+    lfo1.setBaseFrequency(5.0f);
 
     // INIT MODMATRIX
     matrixCoreVoice = std::make_shared<ChordialModMatrixCore>();
@@ -65,23 +71,23 @@ ChordialSynth::ChordialSynth(juce::AudioProcessorValueTreeState& state) : apvtSt
         apvtState.addParameterListener(paramId, this);
     };
 
-    initParam(ADSR1_ATTACK_PARAM, "ADSR1 Attack", 1.0f, 500.0f, 10.0f);
-    initParam(ADSR1_DECAY_PARAM, "ADSR1 Decay", 1.0f, 10000.0f, 100.0f);
-    initParam(ADSR1_SUSTAIN_PARAM, "ADSR1 Sustain", 0.0f, 1.0f, 0.5f);
-    initParam(ADSR1_RELEASE_PARAM, "ADSR1 Release", 3.0f, 10000.0f, 2000.0f);
+    initParam(ADSR1_ATTACK_PARAM, "Attack", 1.0f, 500.0f, masterADSR1.getAttackTimeMs());
+    initParam(ADSR1_DECAY_PARAM, "Decay", 1.0f, 10000.0f, masterADSR1.getDecayTimeMs());
+    initParam(ADSR1_SUSTAIN_PARAM, "Sustain", 0.0f, 1.0f, masterADSR1.getSustainValue());
+    initParam(ADSR1_RELEASE_PARAM, "Release", 3.0f, 10000.0f, masterADSR1.getReleaseTimeMs());
 
-    initParam(ADSR2_ATTACK_PARAM, "ADSR2 Attack", 1.0f, 500.0f, 10.0f);
-    initParam(ADSR2_DECAY_PARAM, "ADSR2 Decay", 1.0f, 10000.0f, 100.0f);
-    initParam(ADSR2_SUSTAIN_PARAM, "ADSR2 Sustain", 0.0f, 1.0f, 0.5f);
-    initParam(ADSR2_RELEASE_PARAM, "ADSR3 Release", 3.0f, 10000.0f, 2000.0f);
+    initParam(ADSR2_ATTACK_PARAM, "Attack", 1.0f, 500.0f, masterADSR2.getAttackTimeMs());
+    initParam(ADSR2_DECAY_PARAM, "Decay", 1.0f, 10000.0f, masterADSR2.getDecayTimeMs());
+    initParam(ADSR2_SUSTAIN_PARAM, "Sustain", 0.0f, 1.0f, masterADSR2.getSustainValue());
+    initParam(ADSR2_RELEASE_PARAM, "Release", 3.0f, 10000.0f, masterADSR2.getReleaseTimeMs());
 
-    initParam(LFO_AMT_PARAM, "LFO Amount", 0.0f, 0.5f, 0.0f, 0.0f, 0.5f);
-    initParam(LFO_FREQ_PARAM, "LFO Frequency", 0.1f, 30.0f, 3.0f);
-    initParam(DETUNE_AMT_PARAM, "Detune Oscillators", 0.000001f, 0.05f, 0.000001f);
-    initParam(SPREAD_PARAM, "Panoramic Spread", 0.0f, 1.0f, 0.0f);
-    initParam(FILTER_CUTOFF_PARAM, "Filter Cutoff", 20.0f, 20000.0f, 329.63f, 0.0f, 0.199f);
-    initParam(FILTER_RESONANCE_PARAM, "Filter Resonance", 0.0f, 1.0f, 0.0f);
-    initParam(FILTER_CUTOFF_MOD_DEPTH_PARAM, "Filter Cutoff Modulation Depth", 0.0f, 8.0f, 4.0f);
+    initParam(LFO_AMT_PARAM, "LFO Amount", 0.0f, 0.5f, masterOscillator->getFrequencyModulationDepth(), 0.0f, 0.5f);
+    initParam(LFO_FREQ_PARAM, "LFO Frequency", 0.1f, 30.0f, lfo1.getBaseFrequency());
+    initParam(DETUNE_AMT_PARAM, "Detune", 0.000001f, 0.05f, masterOscillator->getDetuneAmount());
+    initParam(SPREAD_PARAM, "Panoramic Spread", 0.0f, 1.0f, masterOscillator->getPanoramicSpread());
+    initParam(FILTER_CUTOFF_PARAM, "Cutoff", 20.0f, 20000.0f, masterFilter->getCutoff(), 0.0f, 0.199f);
+    initParam(FILTER_RESONANCE_PARAM, "Resonance", 0.0f, 1.0f, masterFilter->getResonance());
+    initParam(FILTER_CUTOFF_MOD_DEPTH_PARAM, "Cutoff Mod (Env2)", 0.0f, 8.0f, masterFilter->getCutoffModDepth());
 }
 
 void ChordialSynth::prepareToPlay(double sampleRate, int samplesPerBlock)
