@@ -36,42 +36,38 @@ namespace synth
 class ChordialSynth : private juce::AudioProcessorValueTreeState::Listener
 {
 public:
-	ChordialSynth(juce::AudioProcessorValueTreeState& apvtState);
-	void prepareToPlay(double sampleRate, int samplesPerBlock);
-	void setNumberOfVoices(int num);
-	int getNumberOfVoices();
-	void setWidth(float width);
-	float getWidth();
-	void setDetune(float detune);
-	float getDetune();
-	void processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages);
+    ChordialSynth(juce::AudioProcessorValueTreeState& apvtState);
+    void prepareToPlay(double sampleRate, int samplesPerBlock);
+    void setNumberOfVoices(int num);
+    int getNumberOfVoices();
+    void processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages);
 
 private:
-	void parameterChanged(const juce::String &parameterID, float newValue);
+    void parameterChanged(const juce::String &parameterID, float newValue);
 
-	enum class fxIndices
-	{
-		convolutionIndex
-	};
-	juce::dsp::ProcessorChain<juce::dsp::Convolution> fxChain;
+    enum class fxIndices
+    {
+        convolutionIndex
+    };
+    juce::dsp::ProcessorChain<juce::dsp::Convolution> fxChain;
 
-	juce::Synthesiser synth;
+    juce::Synthesiser synth;
     std::shared_ptr<ChordialOscillatorMaster<float>> masterOscillator;
-	std::shared_ptr<ChordialFilterMaster<float>> masterFilter;
+    std::shared_ptr<ChordialFilterMaster<float>> masterFilter;
 
-	static constexpr size_t controlRate = 100;
-	size_t controlUpdateCounter = controlRate;
+    static constexpr size_t controlRate = 100;
+    size_t controlUpdateCounter = controlRate;
 
-	ChordialMasterADSR<float, float> masterADSR1;
-	ChordialMasterADSR<float, float> masterADSR2;
-	ChordialOscillatorVoice<float> lfo1;
-	
-	juce::AudioProcessorValueTreeState& apvtState;
+    ChordialMasterADSR<float, float> masterADSR1;
+    ChordialMasterADSR<float, float> masterADSR2;
+    ChordialOscillatorVoice<float> lfo1;
+    
+    juce::AudioProcessorValueTreeState& apvtState;
 
-	std::shared_ptr<ChordialModMatrixCore> matrixCoreVoice;
+    std::shared_ptr<ChordialModMatrixCore> matrixCoreVoice;
 
-	std::shared_ptr<ChordialModMatrixCore> matrixCoreGlobal;
-	ChordialModMatrix<float> modMatrixGlobal;
+    std::shared_ptr<ChordialModMatrixCore> matrixCoreGlobal;
+    ChordialModMatrix<float> modMatrixGlobal;
 };
 
 }

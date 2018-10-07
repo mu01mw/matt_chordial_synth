@@ -22,7 +22,7 @@ class ChordialDCAMaster
 {
 public:
 private:
-	friend class ChordialDCAVoice<SampleType>;
+    friend class ChordialDCAVoice<SampleType>;
 };
 
 template <typename SampleType>
@@ -30,35 +30,35 @@ class ChordialDCAVoice : public ChordialModuleVoice<SampleType>
 {
 public:
 
-	void prepare(const juce::dsp::ProcessSpec& spec)
-	{
-		gain.prepare(spec);
-		this->sampleRate = spec.sampleRate;
-		this->updateDownSampleRate();
-	}
+    void prepare(const juce::dsp::ProcessSpec& spec)
+    {
+        gain.prepare(spec);
+        this->sampleRate = spec.sampleRate;
+        this->updateDownSampleRate();
+    }
 
-	template <typename ProcessContext>
-	void process(const ProcessContext &context)
-	{
-		gain.setGainLinear(gainModulationInput);
-		gain.process(context);
-	}
+    template <typename ProcessContext>
+    void process(const ProcessContext &context)
+    {
+        gain.setGainLinear(gainModulationInput);
+        gain.process(context);
+    }
 
-	void reset()
-	{
-		gain.reset();
-	}
+    void reset()
+    {
+        gain.reset();
+    }
 
-	SampleType* getGainModInputPtr() { return &gainModulationInput; }
+    SampleType* getGainModInputPtr() { return &gainModulationInput; }
 
 private:
-	void updateSmoothing(SampleType time) override
-	{
-		gain.setRampDurationSeconds(time);
-	}
+    void updateSmoothing(SampleType time) override
+    {
+        gain.setRampDurationSeconds(time);
+    }
 
-	juce::dsp::Gain<SampleType> gain;
-	SampleType gainModulationInput{ static_cast<SampleType>(0.0) };
+    juce::dsp::Gain<SampleType> gain;
+    SampleType gainModulationInput{ static_cast<SampleType>(0.0) };
 };
 
 }

@@ -20,29 +20,29 @@ class ChordialModuleVoice
 {
 public:
     virtual ~ChordialModuleVoice(){};
-	void setSamplesPerControlSignal(int samples)
-	{
-		samplesPerControlSignal = samples;
-		updateDownSampleRate();
-	}
+    void setSamplesPerControlSignal(int samples)
+    {
+        samplesPerControlSignal = samples;
+        updateDownSampleRate();
+    }
 
-	
+    
 
 protected:
-	virtual void updateSmoothing(SampleType time) {};
+    virtual void updateSmoothing(SampleType time) {};
 
-	double sampleRate{ 44100.0 };
+    double sampleRate{ 44100.0 };
 
-	void updateDownSampleRate()
-	{
-		jassert(sampleRate > 0.0);
-		jassert(samplesPerControlSignal > 0);
+    void updateDownSampleRate()
+    {
+        jassert(sampleRate > 0.0);
+        jassert(samplesPerControlSignal > 0);
 
-		auto downSampleRate = sampleRate / samplesPerControlSignal;
-		updateSmoothing(1 / downSampleRate);
-	}
+        auto downSampleRate = sampleRate / samplesPerControlSignal;
+        updateSmoothing(1 / downSampleRate);
+    }
 
-	int samplesPerControlSignal{ 100 };
+    int samplesPerControlSignal{ 100 };
 };
 
 }
