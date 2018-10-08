@@ -15,17 +15,6 @@ namespace synth
 {
 
 template <typename SampleType>
-class ChordialDCAVoice;
-
-template <typename SampleType>
-class ChordialDCAMaster
-{
-public:
-private:
-    friend class ChordialDCAVoice<SampleType>;
-};
-
-template <typename SampleType>
 class ChordialDCAVoice : public ChordialModuleVoice<SampleType>
 {
 public:
