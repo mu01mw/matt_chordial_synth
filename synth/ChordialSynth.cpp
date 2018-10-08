@@ -20,14 +20,14 @@ ChordialSynth::ChordialSynth(juce::AudioProcessorValueTreeState& state) : apvtSt
     masterOscillator->setAntialiasing(true);
     masterOscillator->setPanoramicSpread(1.0f);
     masterOscillator->setDetuneAmount(0.01);
-	masterOscillator->setFrequencyModulationDepth(0.05f);
+    masterOscillator->setFrequencyModulationDepth(0.05f);
 
-	masterADSR2.setAttackTimeMs(100.0f);
-	masterADSR2.setDecayTimeMs(2000.0f);
-	masterADSR2.setSustainValue(0.25f);
+    masterADSR2.setAttackTimeMs(100.0f);
+    masterADSR2.setDecayTimeMs(2000.0f);
+    masterADSR2.setSustainValue(0.25f);
 
     masterFilter = std::make_shared<ChordialFilterMaster<float>>();
-	masterFilter->setResonance(0.75f);
+    masterFilter->setResonance(0.75f);
 
     // INIT MODULATION
     lfo1.setMasterOscillator(std::make_shared<ChordialOscillatorMaster<float>>());
