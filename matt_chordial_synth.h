@@ -34,4 +34,5 @@
 #include "synth/ChordialEnvelope.h"
 #include "synth/ChordialModMatrix.h"
 #include "synth/ChordialVoice.h"
+#include "synth/ChordialSynthesiser.h"
 #include "synth/ChordialSynth.h"

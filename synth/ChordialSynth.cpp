@@ -52,7 +52,7 @@ ChordialSynth::ChordialSynth(juce::AudioProcessorValueTreeState& state) : apvtSt
 
     // INIT VOICES
     auto sound = std::make_unique<ChordialSound>();
-    synth.addSound(sound.release());
+    synthesiser.addSound(sound.release());
     setNumberOfVoices(1);
 
     // INIT EFFECTS
@@ -92,14 +92,14 @@ ChordialSynth::ChordialSynth(juce::AudioProcessorValueTreeState& state) : apvtSt
 
 void ChordialSynth::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
-    synth.setCurrentPlaybackSampleRate(sampleRate);
+	synthesiser.setCurrentPlaybackSampleRate(sampleRate);
     juce::dsp::ProcessSpec spec;
     spec.sampleRate = sampleRate;
     spec.maximumBlockSize = samplesPerBlock;
     spec.numChannels = 2;
 
-    for (int i = 0; i < synth.getNumVoices(); ++i) {
-        auto voice = (ChordialVoice*)synth.getVoice(i);
+    for (int i = 0; i < synthesiser.getNumVoices(); ++i) {
+        auto voice = (ChordialVoice*)synthesiser.getVoice(i);
         voice->prepare(spec);
     }
 
@@ -115,24 +115,24 @@ void ChordialSynth::prepareToPlay(double sampleRate, int samplesPerBlock)
 
 void ChordialSynth::setNumberOfVoices(int num)
 {
-    auto currentNumVoices = synth.getNumVoices();
+    auto currentNumVoices = synthesiser.getNumVoices();
     while (num != currentNumVoices)
     {
         if (num < currentNumVoices)
-            synth.removeVoice(currentNumVoices - 1);
+			synthesiser.removeVoice(currentNumVoices - 1);
         else
         {
             auto voice = std::make_unique<ChordialVoice>(matrixCoreVoice, masterOscillator, masterFilter, masterADSR1, masterADSR2);
-            synth.addVoice(voice.release());
+			synthesiser.addVoice(voice.release());
         }
 
-        currentNumVoices = synth.getNumVoices();
+        currentNumVoices = synthesiser.getNumVoices();
     }
 }
 
 int ChordialSynth::getNumberOfVoices()
 {
-    return synth.getNumVoices();
+    return synthesiser.getNumVoices();
 }
 
 void ChordialSynth::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer & midiMessages)
@@ -148,12 +148,12 @@ void ChordialSynth::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuf
         if (controlUpdateCounter == 0)
         {
             controlUpdateCounter = controlRate;
-			lfo1.updateOscillatorFrequency();
+			lfo1.updateOscillatorFrequency(true);
             lfo1.processSample();
             modMatrixGlobal.process();
         }
 
-        synth.renderNextBlock(buffer, midiMessages, startSample, max);
+		synthesiser.renderNextBlock(buffer, midiMessages, startSample, max);
     }
     buffer.applyGain(0.1f);
 
@@ -183,7 +183,7 @@ void ChordialSynth::parameterChanged(const juce::String & parameterID, float new
         masterADSR2.setReleaseTimeMs(newValue);
 
     else if (parameterID == LFO_FREQ_PARAM)
-        lfo1.setBaseFrequency(newValue);
+        lfo1.setBaseFrequencyWithoutUpdating(newValue);
     else if (parameterID == LFO_AMT_PARAM)
         masterOscillator->setFrequencyModulationDepth(newValue);
     else if (parameterID == SPREAD_PARAM)

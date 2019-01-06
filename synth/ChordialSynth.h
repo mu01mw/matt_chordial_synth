@@ -51,7 +51,7 @@ private:
     };
     juce::dsp::ProcessorChain<juce::dsp::Convolution> fxChain;
 
-    ChordialSynthesiser synth;
+    ChordialSynthesiser synthesiser;
     std::shared_ptr<ChordialOscillatorMaster<float>> masterOscillator;
     std::shared_ptr<ChordialFilterMaster<float>> masterFilter;
 
