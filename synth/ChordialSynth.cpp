@@ -148,6 +148,7 @@ void ChordialSynth::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuf
         if (controlUpdateCounter == 0)
         {
             controlUpdateCounter = controlRate;
+			lfo1.updateOscillatorFrequency();
             lfo1.processSample();
             modMatrixGlobal.process();
         }

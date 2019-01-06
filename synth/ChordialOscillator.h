@@ -189,9 +189,14 @@ public:
 
     void setBaseFrequency(FloatType frequencyInHz)
     {
-        baseFrequency = frequencyInHz;
+		setBaseFrequencyWithoutUpdating(frequencyInHz);
         updateOscillatorFrequency(true);
     }
+
+	void setBaseFrequencyWithoutUpdating(FloatType frequencyInHz)
+	{
+		baseFrequency = frequencyInHz;
+	}
 
     FloatType getBaseFrequency()
     {
@@ -213,7 +218,7 @@ public:
         return &lastOutput;
     }
 
-private:
+
 
     // call this every control processing block
     void updateOscillatorFrequency(bool force = false)
@@ -228,7 +233,7 @@ private:
 
         smoothedFrequency.setValue(detunedFrequency, force);
     }
-
+private:
     // Every sample
     void updatePhaseIncrement()
     {
