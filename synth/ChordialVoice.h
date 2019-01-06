@@ -32,12 +32,12 @@ public:
 
     // Inherited via SynthesiserVoice
     void prepare(const juce::dsp::ProcessSpec& spec);
-    virtual bool canPlaySound(juce::SynthesiserSound *) override;
-    virtual void startNote(int midiNoteNumber, float velocity, juce::SynthesiserSound * sound, int currentPitchWheelPosition) override;
-    virtual void stopNote(float velocity, bool allowTailOff) override;
-    virtual void pitchWheelMoved(int newPitchWheelValue) override;
-    virtual void controllerMoved(int controllerNumber, int newControllerValue) override;
-    virtual void renderNextBlock(juce::AudioBuffer<float>& outputBuffer, int startSample, int numSamples) override;
+    bool canPlaySound(juce::SynthesiserSound *) override;
+    void startNote(int midiNoteNumber, float velocity, juce::SynthesiserSound * sound, int currentPitchWheelPosition) override;
+    void stopNote(float velocity, bool allowTailOff) override;
+    void pitchWheelMoved(int newPitchWheelValue) override;
+    void controllerMoved(int controllerNumber, int newControllerValue) override;
+    void renderNextBlock(juce::AudioBuffer<float>& outputBuffer, int startSample, int numSamples) override;
     
 private:
     enum {
