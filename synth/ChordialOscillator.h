@@ -195,12 +195,12 @@ public:
 
 	void setBaseFrequencyWithoutUpdating(FloatType frequencyInHz)
 	{
-		baseFrequency = frequencyInHz;
+		baseFrequency.store(frequencyInHz);
 	}
 
     FloatType getBaseFrequency()
     {
-        return baseFrequency;
+        return baseFrequency.load();
     }
     
     void setDetuneMultiplier(FloatType multiplier)
@@ -227,7 +227,7 @@ public:
         const auto localDetuneMultiplier = detuneMultiplier.load();
         const auto localFMDepth = masterOscillator->frequencyModulationDepth.load();
 
-        auto detunedFrequency = baseFrequency * std::pow(2.0, localDetune* localDetuneMultiplier);
+        auto detunedFrequency = baseFrequency.load() * std::pow(2.0, localDetune* localDetuneMultiplier);
 
         detunedFrequency *= std::pow(2.0, localFMDepth * masterOscillator->frequencyModulation);
 
@@ -278,7 +278,7 @@ private:
     std::atomic<FloatType> panMultiplier{ static_cast<FloatType>(1.0) };
 
     // For oscillator implementation
-    FloatType baseFrequency{ static_cast<FloatType>(440.0) };
+    std::atomic<FloatType> baseFrequency{ static_cast<FloatType>(440.0) };
     FloatType phase{ static_cast<FloatType>(0.0) };
     FloatType phaseIncrement;
     juce::HeapBlock<char> heapBlock;
