@@ -41,7 +41,6 @@ public:
     void setNumberOfVoices(int num);
     int getNumberOfVoices();
     void processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages);
-
 private:
     void parameterChanged(const juce::String &parameterID, float newValue);
 

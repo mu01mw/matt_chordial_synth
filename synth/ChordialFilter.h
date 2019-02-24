@@ -108,6 +108,7 @@ public:
 
     void reset()
     {
+		updateCutoff();
         filter.reset();
     }
 

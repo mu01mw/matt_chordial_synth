@@ -16,7 +16,7 @@ namespace synth
 ChordialSynth::ChordialSynth(juce::AudioProcessorValueTreeState& state) : apvtState(state)
 {
     masterOscillator = std::make_shared<ChordialOscillatorMaster<float>>();
-    masterOscillator->setWaveform(ChordialOscillatorMaster<float>::Waveform::saw);
+    masterOscillator->setWaveform(ChordialOscillatorMaster<float>::Waveform::triangle);
     masterOscillator->setAntialiasing(true);
     masterOscillator->setPanoramicSpread(1.0f);
     masterOscillator->setDetuneAmount(0.01);
@@ -57,12 +57,13 @@ ChordialSynth::ChordialSynth(juce::AudioProcessorValueTreeState& state) : apvtSt
 
     // INIT EFFECTS
 
-    /*auto dir = File::getCurrentWorkingDirectory();
+    /*auto dir = juce::File::getCurrentWorkingDirectory();
     int numTries = 0;
     while (!dir.getChildFile("Resources").exists() && numTries++ < 15)
     dir = dir.getParentDirectory();
-    auto& convolution = processorChain.template get<convolutionIndex>(); // [5]
-    convolution.loadImpulseResponse(dir.getChildFile("Resources").getChildFile("phone90s.wav"), true, false, 0); // [6]*/
+    auto& convolution = fxChain.template get<(int)fxIndices::convolutionIndex>(); // [5]
+    convolution.loadImpulseResponse(dir.getChildFile("Resources").getChildFile("phone90s.wav"), true, false, 0); // [6]
+	*/
 
     // INIT PARAMETERS
     auto initParam = [&](const juce::String& paramId, const juce::String& label, float rangeStart, float rangeEnd, float defaultValue, float interval = 0.0f, float skew = 1.0f)
@@ -103,7 +104,7 @@ void ChordialSynth::prepareToPlay(double sampleRate, int samplesPerBlock)
         voice->prepare(spec);
     }
 
-    fxChain.prepare(spec);
+    //fxChain.prepare(spec);
 
     auto downSampleRate = spec.sampleRate / controlRate;
 
@@ -157,9 +158,9 @@ void ChordialSynth::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuf
     }
     buffer.applyGain(0.1f);
 
-    //auto block = juce::dsp::AudioBlock<float>(buffer);
-    //auto contextToUse = juce::dsp::ProcessContextReplacing<float>(block);
-    //processorChain.process(contextToUse);
+    /*auto block = juce::dsp::AudioBlock<float>(buffer);
+    auto contextToUse = juce::dsp::ProcessContextReplacing<float>(block);
+    fxChain.process(contextToUse);*/
 }
 
 void ChordialSynth::parameterChanged(const juce::String & parameterID, float newValue)
