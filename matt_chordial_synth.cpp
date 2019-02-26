@@ -11,4 +11,3 @@
 
 #include "synth/ChordialVoice.cpp"
 #include "synth/ChordialSynthesiser.cpp"
-#include "synth/ChordialSynth.cpp"
