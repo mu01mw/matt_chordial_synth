@@ -48,7 +48,9 @@ ChordialVoice::ChordialVoice(std::shared_ptr<ChordialModMatrixCore> matrixCore,
 
 void ChordialVoice::prepare(const juce::dsp::ProcessSpec & spec)
 {
-    tempBlock = juce::dsp::AudioBlock<float>(heapBlock, spec.numChannels, spec.maximumBlockSize);
+	auto stealSize = static_cast<juce::uint32>(spec.sampleRate * 0.005);
+	auto bufferSize = juce::jmax(stealSize, spec.maximumBlockSize);
+    tempBlock = juce::dsp::AudioBlock<float>(heapBlock, spec.numChannels, bufferSize);
     processorChain.prepare(spec);
 
     auto& o1 = processorChain.template get<osc1>();
@@ -69,20 +71,16 @@ void ChordialVoice::startNote(int midiNoteNumber, float velocity, juce::Synthesi
     auto hz = juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber);
 
     auto& o1 = processorChain.template get<osc1>();
-    //o1.reset();
     o1.setBaseFrequency(hz);
 
     auto& o2 = processorChain.template get<osc2>();
-    //o2.reset();
     o2.setBaseFrequency(hz);
 
     auto& o3 = processorChain.template get<osc3>();
-    //o3.reset();
     o3.setBaseFrequency(hz);
 
     auto& f = processorChain.template get<filter>();
     f.setNoteNumber(midiNoteNumber);
-    //f.reset();
 
     adsr1.gate(true);
     adsr2.gate(true);
@@ -93,12 +91,6 @@ void ChordialVoice::stopNote(float velocity, bool allowTailOff)
 {
     adsr1.gate(false);
     adsr2.gate(false);
-    if (!allowTailOff)
-    {
-        adsr1.reset();
-        adsr2.reset();
-        clearCurrentNote();
-    }
 }
 
 void ChordialVoice::pitchWheelMoved(int newPitchWheelValue)
@@ -140,8 +132,6 @@ void ChordialVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer, int 
         juce::dsp::AudioBlock<float>(outputBuffer)
             .getSubBlock((size_t)startSample, (size_t)numSamples)
             .add(subBlock);
-
-        
     }
 }
 }
