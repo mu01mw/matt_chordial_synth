@@ -82,7 +82,7 @@ void ChordialVoice::startNote(int midiNoteNumber, float velocity, juce::Synthesi
 
     auto& f = processorChain.template get<filter>();
     f.setNoteNumber(midiNoteNumber);
-    //f.reset();
+    f.reset();
 
     adsr1.gate(true);
     adsr2.gate(true);
