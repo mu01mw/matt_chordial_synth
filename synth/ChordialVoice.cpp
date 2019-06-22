@@ -69,15 +69,12 @@ void ChordialVoice::startNote(int midiNoteNumber, float velocity, juce::Synthesi
     auto hz = juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber);
 
     auto& o1 = processorChain.template get<osc1>();
-    //o1.reset();
     o1.setBaseFrequency(hz);
 
     auto& o2 = processorChain.template get<osc2>();
-    //o2.reset();
     o2.setBaseFrequency(hz);
 
     auto& o3 = processorChain.template get<osc3>();
-    //o3.reset();
     o3.setBaseFrequency(hz);
 
     auto& f = processorChain.template get<filter>();
@@ -140,8 +137,6 @@ void ChordialVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer, int 
         juce::dsp::AudioBlock<float>(outputBuffer)
             .getSubBlock((size_t)startSample, (size_t)numSamples)
             .add(subBlock);
-
-        
     }
 }
 }

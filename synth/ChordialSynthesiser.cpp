@@ -81,7 +81,6 @@ chordial::synth::ChordialSynthesiser::ChordialSynthesiser(juce::AudioProcessorVa
 
 void chordial::synth::ChordialSynthesiser::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
-	setCurrentPlaybackSampleRate(sampleRate);
 	juce::dsp::ProcessSpec spec;
 	spec.sampleRate = sampleRate;
 	spec.maximumBlockSize = samplesPerBlock;
@@ -92,6 +91,8 @@ void chordial::synth::ChordialSynthesiser::prepareToPlay(double sampleRate, int 
 		if (auto cv = dynamic_cast<ChordialVoice*>(voice))
 			cv->prepare(spec);
 	}
+
+	setCurrentPlaybackSampleRate(sampleRate);
 
 	//fxChain.prepare(spec);
 
