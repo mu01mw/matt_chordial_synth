@@ -138,9 +138,9 @@ public:
         updatePhaseIncrement();
         const auto localWaveform = masterOscillator->waveform.load();
         const auto localAA = masterOscillator->antialiased.load();
-        const auto pi = juce::MathConstants<FloatType>::pi;
+        //const auto pi = juce::MathConstants<FloatType>::pi;
         FloatType t = phase / juce::MathConstants<FloatType>::twoPi;
-        FloatType x = 0.0;
+        //FloatType x = 0.0;
         
         switch (localWaveform)
         {

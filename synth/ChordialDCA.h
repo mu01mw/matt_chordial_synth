@@ -29,13 +29,19 @@ public:
     template <typename ProcessContext>
     void process(const ProcessContext &context)
     {
-        gain.setGainLinear(gainModulationInput);
+        gain.setGainLinear(voiceGain * gainModulationInput);
         gain.process(context);
     }
 
     void reset()
     {
         gain.reset();
+    }
+    
+    // always audio thread
+    void setVoiceGain(float gain)
+    {
+        voiceGain = gain;
     }
 
     SampleType* getGainModInputPtr() { return &gainModulationInput; }
@@ -48,6 +54,7 @@ private:
 
     juce::dsp::Gain<SampleType> gain;
     SampleType gainModulationInput{ static_cast<SampleType>(0.0) };
+    SampleType voiceGain { 0.f };
 };
 
 }

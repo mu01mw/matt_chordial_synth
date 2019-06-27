@@ -42,7 +42,7 @@ ChordialVoice::ChordialVoice(std::shared_ptr<ChordialModMatrixCore> matrixCore,
     modMatrix.addModSource({ VOICE_ADSR1_OUT, adsr1.getOutputPtr() });
     modMatrix.addModSource({ VOICE_ADSR2_OUT, adsr2.getOutputPtr() });
     modMatrix.addModDestination({ VOICE_FILTER_MASTER_CUTOFF_IN, f.getCutoffModVoicePtr() });
-    modMatrix.addModDestination({ VOICE_DCA_GAIN_IN, processorChain.template get<gain>().getGainModInputPtr() });
+    modMatrix.addModDestination({ VOICE_DCA_GAIN_IN, processorChain.template get<dca>().getGainModInputPtr() });
     
 }
 
@@ -53,8 +53,8 @@ void ChordialVoice::prepare(const juce::dsp::ProcessSpec & spec)
 
     auto& o1 = processorChain.template get<osc1>();
     auto& o2 = processorChain.template get<osc2>();
-    auto& dca = processorChain.template get<gain>();
-    dca.setSamplesPerControlSignal(controlRate);
+    auto& d = processorChain.template get<dca>();
+    d.setSamplesPerControlSignal(controlRate);
     o1.setSamplesPerControlSignal(controlRate);
     o2.setSamplesPerControlSignal(controlRate);
 }
@@ -81,6 +81,8 @@ void ChordialVoice::startNote(int midiNoteNumber, float velocity, juce::Synthesi
     f.setNoteNumber(midiNoteNumber);
     f.reset();
 
+    auto& d = processorChain.template get<dca>();
+    d.setVoiceGain(velocity);
     adsr1.gate(true);
     adsr2.gate(true);
 

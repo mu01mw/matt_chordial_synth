@@ -45,7 +45,7 @@ private:
         osc2,
         osc3,
         filter,
-        gain
+        dca
     };
 
     juce::HeapBlock<char> heapBlock;

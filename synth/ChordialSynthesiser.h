@@ -39,7 +39,7 @@ private:
 	juce::SynthesiserVoice* findVoiceToSteal(juce::SynthesiserSound *soundToPlay, int midiChannel, int midiNoteNumber) const override;
 	void renderVoices(juce::AudioBuffer< float > & 	outputAudio, int startSample, int numSamples) override;
 
-	void parameterChanged(const juce::String &parameterID, float newValue);
+	void parameterChanged(const juce::String &parameterID, float newValue) override;
 
 	juce::AudioProcessorValueTreeState& apvtState;
 
